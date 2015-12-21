@@ -43,9 +43,9 @@ function($scope, $http){
 
 	$scope.plot = function(){
 		$http({
-			method: 'GET',
+			method: 'POST',
 			url: buildURL()+'/plot',
-			data: {}
+			data: $scope.queryModel
 		}).then(function success(response){
 			chart(response.data);
 		}, function error(response) {

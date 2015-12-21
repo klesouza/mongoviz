@@ -31,7 +31,10 @@ def data(server, port, db, collection):
 	discovery = Discovery(col)
 	return json.dumps({ 'fields': [{'Id': x, 'Name': x} for x in discovery.list_collection_fields()]}, default=json_util.default)
 
-@app.route('/<server>/<port>/<db>/<collection>/plot')
+@app.route('/<server>/<port>/<db>/<collection>/plot', methods=['POST'])
 def plot(server, port, db, collection):
 	col = getCollection(server, port, db, collection)
-	return json.dumps({ "series": [{"data": [{"name": x["_id"], "y": x['y']} for x in  col.aggregate(AggregationBuilder.build('IdStatus', 'count'))]}]}, default=json_util.default)
+	data = json.loads(request.data)
+	agg = AggregationBuilder(col)
+	agg.build(data['selectedField']['Id'], data['selectedAgg'])
+	return json.dumps({ "series": [{"data": [{"name": x["_id"], "y": x['y']} for x in agg.run()]}]}, default=json_util.default)
