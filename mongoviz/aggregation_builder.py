@@ -18,5 +18,9 @@ class AggregationBuilder:
         limit = {"$limit": 15}
         self._pipeline = [group,sort, limit]
 
+    def parse_string(self, query):
+        import json
+        self._pipeline = json.loads(query)
+
     def run(self):
         return self._collection.aggregate(self._pipeline)

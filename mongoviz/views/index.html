@@ -45,17 +45,35 @@
     <div class="container">
         <!-- Marketing Icons Section -->
         <div class="row">
+            <div class="col-lg-12">
+                <ul class="nav nav-tabs">
+                    <li role="presentation" ng-click="queryModel.selectedTab = 1" ng-class="(queryModel.selectedTab == 1) ? 'active' : ''"><a href="#">Free Query</a></li>
+                    <li role="presentation" ng-click="queryModel.selectedTab = 2" ng-class="(queryModel.selectedTab == 2) ? 'active' : ''"><a href="#">Selection</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row" ng-show="queryModel.selectedTab == 1">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Aggregate Query</div>
+                    <div class="panel-body">
+                        <textarea name="aggregatequery" ng-model='queryModel.freeQuery' class="col-lg-12" rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" ng-show="queryModel.selectedTab == 2">
             <div class="col-lg-3">
                 <div class="panel panel-default">
                     <div class="panel-heading">Field selection (X axis)</div>
                     <div class="panel-body">
                         <div class="dropdown">
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                {{queryModel.selectedField.Name || 'Field'}}
+                                {{queryModel.selectedField || 'Field'}}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu1">
-                                <li ng-repeat="a in fields"><a ng-click="selectField('selectedField',a)">{{a.Name}}</a></li>
+                                <li ng-repeat="a in fields"><a ng-click="selectField('selectedField',a)">{{a}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -76,11 +94,11 @@
                         </div>
                         <div class="btn-group" ng-show='showAggField' class="ng-hide">
                             <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                {{queryModel.selectedAggField.Name || 'Field'}}
+                                {{queryModel.selectedAggField || 'Field'}}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu4">
-                                <li ng-repeat="a in fields"><a ng-click="selectField('selectedAggField',a)">{{a.Name}}</a></li>
+                                <li ng-repeat="a in fields"><a ng-click="selectField('selectedAggField',a)">{{a}}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -93,11 +111,11 @@
                         <div class="input-group">
                             <div class="input-group-btn">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    {{queryModel.selectedFilter.Name || 'Filter'}}
+                                    {{queryModel.selectedFilter || 'Filter'}}
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu scrollable-menu" aria-labelledby="dropdownMenu3">
-                                    <li ng-repeat="a in fields"><a ng-click="selectField('selectedFilter',a)">{{a.Name}}</a></li>
+                                    <li ng-repeat="a in fields"><a ng-click="selectField('selectedFilter',a)">{{a}}</a></li>
                                 </ul>
                             </div>
                             <input type="text" class="form-control" aria-label="...">
@@ -107,7 +125,7 @@
             </div>
         </div><div class="row">
             <div class="col-lg-12">
-<button ng-click="plot()" type="button" class="btn btn-default">Run</button>
+                <button ng-click="plot()" type="button" class="btn btn-default">Run</button>
             </div>
         </div>
         <div class="row">

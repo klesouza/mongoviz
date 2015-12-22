@@ -15,7 +15,9 @@ function($scope, $http){
 		selectedField: '',
 		selectedAgg: '',
 		selectedAggField: '',
-		selectedFilter: ''
+		selectedFilter: '',
+		freeQuery: '',
+		selectedTab: 2
 	};
 	$scope.showAggField = false;
 	function buildURL(){

@@ -11,14 +11,16 @@ def set_series(_chart, _type, x, y):
             "data": [[x[i], y[i]] for i in range(len(x))]
         }]
     elif _type == BAR_TYPE:
-        _chart["series"] = [{
-            "data": [{"name": x[i], "y": y[i]} for i in range(len(x))]
-        }]
+        _chart["xAxis"] = {"categories": x}
+        _chart["series"] = [{"name": "Serie", "data": y}]
 
 def choose_bestconfig(x, y):
     _chart = {
         "chart":{
             "type": "line"
+        },
+        "tooltip": {
+            "valueDecimals": 2
         },
         "series": []
     }

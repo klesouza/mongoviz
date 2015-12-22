@@ -1,4 +1,3 @@
-from mongoviz import app
 class Discovery():
 
 	_collection = None

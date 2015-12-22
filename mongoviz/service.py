@@ -30,15 +30,20 @@ def getCollection(server, port, db, collection):
 def data(server, port, db, collection):
 	col = getCollection(server, port, db, collection)
 	discovery = Discovery(col)
-	return json.dumps({ 'fields': [{'Id': x, 'Name': x} for x in discovery.list_collection_fields()]}, default=json_util.default)
+	return json.dumps({ 'fields': [x for x in discovery.list_collection_fields()]}, default=json_util.default)
 
 @app.route('/<server>/<port>/<db>/<collection>/plot', methods=['POST'])
 def plot(server, port, db, collection):
 	col = getCollection(server, port, db, collection)
 	data = json.loads(request.data)
 	agg = AggregationBuilder(col)
-	agg.build(data['selectedField']['Id'], data['selectedAgg'])
-	data = [[x["_id"], x['y']] for x in agg.run()]
-	app.logger.info(data)
-	chart = highcharts.choose_bestconfig([x[0] for x in data], [x[1] for x in data])
+	if data["selectedTab"] == 2:
+		agg.build(data['selectedField'], data['selectedAgg'], data['selectedAggField'], data['selectedFilter'])
+	elif data["selectedTab"] == 1:
+		agg.parse_string(data['freeQuery'])
+	else:
+		raise 'Invalid request'
+	app.logger.info(agg._pipeline)
+	result = [[x["_id"], x['y']] for x in agg.run()]
+	chart = highcharts.choose_bestconfig([x[0] for x in result], [x[1] for x in result])
 	return json.dumps(chart, default=json_util.default)
