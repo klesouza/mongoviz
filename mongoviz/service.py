@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request, make_response
 from mongoviz import app, discovery
 from mongoviz.discovery import Discovery
 from mongoviz.aggregation_builder import AggregationBuilder
+from mongoviz import highcharts
 from pymongo import MongoClient
 import json
 from bson import json_util
@@ -37,4 +38,7 @@ def plot(server, port, db, collection):
 	data = json.loads(request.data)
 	agg = AggregationBuilder(col)
 	agg.build(data['selectedField']['Id'], data['selectedAgg'])
-	return json.dumps({ "series": [{"data": [{"name": x["_id"], "y": x['y']} for x in agg.run()]}]}, default=json_util.default)
+	data = [[x["_id"], x['y']] for x in agg.run()]
+	app.logger.info(data)
+	chart = highcharts.choose_bestconfig([x[0] for x in data], [x[1] for x in data])
+	return json.dumps(chart, default=json_util.default)

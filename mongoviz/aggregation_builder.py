@@ -14,8 +14,9 @@ class AggregationBuilder:
             group["$group"]["y"] = {"$sum": "$"+aggfield}
 
         match = {"$match": {}}
+        sort = {"$sort": {"_id": 1}}
         limit = {"$limit": 15}
-        self._pipeline = [group, limit]
+        self._pipeline = [group,sort, limit]
 
-    def run(self, pipeline):
+    def run(self):
         return self._collection.aggregate(self._pipeline)

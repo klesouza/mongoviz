@@ -1,34 +1,36 @@
-class Highcharts:
-    _chart = None
+
+LINE_TYPE = 'line'
+BAR_TYPE = 'column'
+
+def set_charttype(_chart, _type):
+    _chart["chart"]["type"] = _type
+
+def set_series(_chart, _type, x, y):
+    if _type == LINE_TYPE:
+        _chart["series"] = [{
+            "data": [[x[i], y[i]] for i in range(len(x))]
+        }]
+    elif _type == BAR_TYPE:
+        _chart["series"] = [{
+            "data": [{"name": x[i], "y": y[i]} for i in range(len(x))]
+        }]
+
+def choose_bestconfig(x, y):
+    _chart = {
+        "chart":{
+            "type": "line"
+        },
+        "series": []
+    }
     _type = None
-    LINE_TYPE = 'line'
-    BAR_TYPE = 'bar'
-    def __init__(self):
-        self._chart = {
-            "chart":{
-                "type": "line"
-            },
-            "series": []
-        }
+    i = 0
+    while i < len(x) and x[i] is None:
+        i += 1
+    if x[i] is not None and unicode(x[i]).isdigit():
+        _type = LINE_TYPE
+    else:# isinstance(x[0], str):
+        _type = BAR_TYPE
 
-    def set_charttype(self, type):
-        self._type = type
-        self._chart["chart"]["type"] = type
-
-    def set_series(self, x, y):
-        if self._type == LINE_TYPE:
-            self._chart["series"] = [{
-                "data": [[x[i], y[i]] for i in len(x)]
-            }]
-        if self._type == LINE_TYPE:
-            self._chart["series"] = [{
-                "data": [{"name": x[i], "y": y[i]} for i in len(x)]
-            }]
-
-    def choose_bestconfig(self, x, y):
-        if isinstance(x[0], int):
-            set_charttype(LINE_TYPE)
-        elif isinstance(x[0], string):
-            set_charttype(BAR_TYPE)
-        set_series(x, y)
-        return _chart
+    set_charttype(_chart, _type)
+    set_series(_chart, _type, x, y)
+    return _chart
