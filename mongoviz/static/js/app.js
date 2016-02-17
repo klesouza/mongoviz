@@ -5,6 +5,7 @@ app.controller('VizController',
 function($scope, $http){
 	$scope.fields = [];
 	$scope.aggs = ["count", "sum"];
+	$scope.logAxis = false;
 	$scope.model = {
 		server: "localhost",
 		port: "27017",
@@ -54,7 +55,12 @@ function($scope, $http){
 		});
 	};
 
+	$scope.changeAxis = function(){
+		$('#chart').highcharts().yAxis[0].update({ type: ($scope.logAxis ? 'logarithmic' : 'linear')});
+	}
+
 	function chart(data){
-		$("#chart").highcharts(data);
+		var opt = $.extend({title: {text: 'Viz'}}, data);
+		$("#chart").highcharts(opt);
 	};
 });

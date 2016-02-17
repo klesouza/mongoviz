@@ -20,6 +20,7 @@ class AggregationBuilder:
 
     def parse_string(self, query):
         import json
+        allowed = ["$match", "$group", "$unwind", "$sort", "$limit", "$project", "$redact", "$skip", "$geoNear"]
         self._pipeline = json.loads(query)
 
     def run(self):

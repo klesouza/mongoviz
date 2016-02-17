@@ -12,7 +12,7 @@ def set_series(_chart, _type, x, y):
         }]
     elif _type == BAR_TYPE:
         _chart["xAxis"] = {"categories": x}
-        _chart["series"] = [{"name": "Serie", "data": y}]
+        _chart["series"] = [{"name": "Default", "data": y}]
 
 def choose_bestconfig(x, y):
     _chart = {
