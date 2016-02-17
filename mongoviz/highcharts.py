@@ -28,6 +28,7 @@ def choose_bestconfig(x, y):
     i = 0
     while i < len(x) and x[i] is None:
         i += 1
+    #grouped X 
     if x[i] is not None and unicode(x[i]).isdigit():
         _type = LINE_TYPE
     else:# isinstance(x[0], str):

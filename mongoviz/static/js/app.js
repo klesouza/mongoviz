@@ -4,8 +4,12 @@ var app = angular.module('mongoviz', []);
 app.controller('VizController',
 function($scope, $http){
 	$scope.fields = [];
+<<<<<<< HEAD
 	$scope.aggs = ["count", "sum"];
 	$scope.logAxis = false;
+=======
+	$scope.aggs = ["count", "sum", "avg"];
+>>>>>>> origin/master
 	$scope.model = {
 		server: "localhost",
 		port: "27017",
