@@ -11,7 +11,8 @@ def error_message(msg):
 	return msg
 
 @app.route('/')
-def index():
+@app.route('/<db>/<collection>', defaults={'db': None, 'collection': None})
+def index(db = None, collection = None):
 	appdir = os.path.abspath(os.path.dirname(__file__))
 	return make_response(open(os.path.join(appdir, 'views/index.html')).read())
 
