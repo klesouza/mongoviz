@@ -68,12 +68,15 @@ function($scope, $http, $location){
 		}).then(function success(response){
 			chart(response.data);
 		}, function error(response) {
+			if(Array.isArray(response.data))
+			for(var i in response.data)
+				toastr.warning(response.data[i]);
 		});
 	};
 
 	function validateFreeQuery(){
 		var op = ['$group', '$project'];
-		$scope.queryModel.freeQuery = "[";
+		var fq = []
 		$(".list-group li .input-group").removeClass('has-warning');
 		var lastOp = null;
 		var valid = true;
@@ -84,7 +87,7 @@ function($scope, $http, $location){
 				if($.inArray($scope.pipeline[i].op, op) >= 0){
 					lastOp = parsed[$scope.pipeline[i].op];
 				}
-				$scope.queryModel.freeQuery += j;
+				fq.push(j);
 			}
 			catch(err){
 				$(".list-group li:nth("+i+") .input-group").addClass('has-warning');
@@ -92,7 +95,7 @@ function($scope, $http, $location){
 				}
 			}
 		//$scope.queryModel.freeQuery = '['+$scope.pipeline.map(function(x) {return '{"'+x.op+'":'+x.value+'}'}).join(',')+']';
-		$scope.queryModel.freeQuery += "]";
+		$scope.queryModel.freeQuery = "["+fq.join(',')+"]";
 		setTimeout(function(){$(".list-group li .input-group").removeClass('has-warning');}, 10000);
 		if(valid)
 			console.log(lastOp);

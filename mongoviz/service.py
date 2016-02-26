@@ -47,6 +47,9 @@ def plot(server, port, db, collection):
 		agg.parse_string(data['freeQuery'])
 	else:
 		raise 'Invalid request'
-	result = [[x["_id"], x['y']] for x in agg.run()]
-	chart = highcharts.choose_bestconfig([x[0] for x in result], [x[1] for x in result])
+
+	result = agg.run()
+	if agg.has_errors():
+		return json.dumps(agg.get_errors(), default=json_util.default), 400
+	chart = highcharts.choose_bestconfig(result)
 	return json.dumps(chart, default=json_util.default)
