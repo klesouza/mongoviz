@@ -1,7 +1,7 @@
 
 LINE_TYPE = 'line'
 BAR_TYPE = 'column'
-
+import numpy as np
 def set_charttype(_chart, _type):
     _chart["chart"]["type"] = _type
 
@@ -9,7 +9,7 @@ def set_series(_chart, _type, x, y, series):
     if _type == LINE_TYPE:
         _chart["series"] = [{
             "name": s,
-            "data": [[x[idx][i], y[idx][i]] for i in range(len(x))]
+            "data": [[xv, yv] for xv,yv in zip(np.sort(x[idx]), np.array(y[idx])[np.argsort(x[idx])])]
         } for idx, s in enumerate(series)]
     elif _type == BAR_TYPE:
         _chart["xAxis"] = {"categories": list(set(reduce(lambda a,b:a+b, x)))}
@@ -38,7 +38,7 @@ def choose_bestconfig(data):
     while i < len(x) and x[i] is None:
         i += 1
     #grouped X
-    if x[i] is not None and unicode(x[i]).isdigit():
+    if x[i] is not None and unicode(x[i][0]).isdigit():
         _type = LINE_TYPE
     else:# isinstance(x[0], str):
         _type = BAR_TYPE

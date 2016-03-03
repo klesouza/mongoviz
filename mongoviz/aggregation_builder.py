@@ -36,7 +36,6 @@ class AggregationBuilder:
         if len(self._result) == 0:
             return
         err = 'Your result must have "{}" field'
-        print self._result[0]
         if '_id' not in self._result[0]:
             self._errors.append(err.format('_id'))
         if 'y' not in self._result[0] and 'series' not in self._result[0]:
