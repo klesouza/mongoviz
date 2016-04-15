@@ -1,48 +1,81 @@
 
 LINE_TYPE = 'line'
 BAR_TYPE = 'column'
-import numpy as np
-def set_charttype(_chart, _type):
-    _chart["chart"]["type"] = _type
 
-def set_series(_chart, _type, x, y, series):
-    if _type == LINE_TYPE:
-        _chart["series"] = [{
-            "name": s,
-            "data": [[xv, yv] for xv,yv in zip(np.sort(x[idx]), np.array(y[idx])[np.argsort(x[idx])])]
-        } for idx, s in enumerate(series)]
-    elif _type == BAR_TYPE:
-        _chart["xAxis"] = {"categories": list(set(reduce(lambda a,b:a+b, x)))}
-        _chart["series"] = [{"name": s, "data": y[idx]} for idx, s in enumerate(series)]
+class BaseChart(object):
+    _chart = {}
+    _data = None
+    def __init__(self, data):
+        self._data = data
+        self._chart = {
+            "chart":{
+                "type": None
+            },
+            "tooltip": {
+                "valueDecimals": 2
+            },
+            "series": []
+        }
+    def set_series(self):
+        pass
 
-def choose_bestconfig(data):
-    series = ["Default"]
-    if 'y' in data[0]:
-        x = [[d['_id'] for d in data]]
-        y = [[d['y'] for d in data]]
-    elif 'series' in data[0]:
-        x = [[d['x'] for d in s['series']] for s in data]
-        y = [[d['y'] for d in s['series']] for s in data]
-        series = [d['_id'] for d in data]
-    _chart = {
-        "chart":{
-            "type": LINE_TYPE
-        },
-        "tooltip": {
-            "valueDecimals": 2
-        },
-        "series": []
-    }
-    _type = None
-    i = 0
-    while i < len(x) and x[i] is None:
-        i += 1
-    #grouped X
-    if x[i] is not None and unicode(x[i][0]).isdigit():
-        _type = LINE_TYPE
-    else:# isinstance(x[0], str):
-        _type = BAR_TYPE
+class EmptyChart(BaseChart):
+    def __init__(self):
+        BaseChart.__init__(self, None)
+    def set_series(self):
+        pass
 
-    set_charttype(_chart, _type)
-    set_series(_chart, _type, x, y, series)
-    return _chart
+class LineChart(BaseChart):
+    def __init__(self, data):
+        BaseChart.__init__(self, data)
+        self._chart["chart"]["type"] = LINE_TYPE
+    def set_series(self):
+        srt = sorted(self._data, key=lambda x: x['_id'])
+        if any(( 'y' in x for x in self._data )):
+            series = [{'name': x['name'], 'data': [srt[i], x['y']]} for i,x in enumerate([{'name': 'Default', 'y': srt}])]
+        else:
+            categories = [x['_id'] for x in srt]
+            s = {}
+            for m,d in enumerate(srt):
+                for k in d["series"]:
+                    if k["name"] not in s:
+                        s[k['name']] = [0]*len(srt)
+                    s[k['name']][m] = k['y']
+            series = [{'name': x, 'data':y} for x,y in s.iteritems() ]
+            self._chart["xAxis"] = {'categories': categories}
+        self._chart["series"] = series
+
+class BarChart(BaseChart):
+    def __init__(self, data):
+        BaseChart.__init__(self, data)
+        self._chart["chart"]["type"] = BAR_TYPE
+
+    def set_series(self):
+        categories = [x['_id'] for x in self._data]
+        if any(( 'y' in x for x in self._data )):
+            series = [{'name': 'Default', 'data': [x['y'] for x in self._data ]}]
+        else:
+            s = {}
+            for m,d in enumerate(self._data):
+                for k in d["series"]:
+                    if k["x"] not in s:
+                        s[k['x']] = [0]*len(self._data)
+                    s[k['x']][m] = k['y']
+            series = [{'name': x, 'data':y} for x,y in s.iteritems() ]
+        self._chart["xAxis"] = {'categories': categories}
+        self._chart["series"] = series
+
+class Chart:
+    _current = None
+    def __init__(self, data):
+        _current = EmptyChart()
+        print len(data)
+        if isinstance(data,list) and len(data) > 0 and isinstance(data[0], dict) and '_id' in data[0]:
+            if all([unicode(x['_id']).replace('.','').isdigit() for x in data]):
+                self._current = LineChart(data)
+            else:
+                self._current = BarChart(data)
+        self._current.set_series()
+
+    def chart(self):
+        return self._current._chart

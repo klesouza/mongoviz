@@ -94,11 +94,14 @@ function($scope, $http, $location){
 				valid = false;
 				}
 			}
-		//$scope.queryModel.freeQuery = '['+$scope.pipeline.map(function(x) {return '{"'+x.op+'":'+x.value+'}'}).join(',')+']';
-		$scope.queryModel.freeQuery = "["+fq.join(',')+"]";
-		setTimeout(function(){$(".list-group li .input-group").removeClass('has-warning');}, 10000);
+		if(fq.length == 0){
+			valid = false;
+		}
 		if(valid)
-			console.log(lastOp);
+			$scope.queryModel.freeQuery = "["+fq.join(',')+"]";
+		setTimeout(function(){$(".list-group li .input-group").removeClass('has-warning');}, 10000);
+		//if(valid)
+			//console.log(lastOp);
 		return valid;
 	}
 
@@ -112,6 +115,32 @@ function($scope, $http, $location){
 
 	$scope.removePipeline = function(idx){
 		$scope.pipeline.pop(idx);
+	}
+
+	$scope.savePipeline = function(name){
+		if(!name){
+			if(!validateFreeQuery()){
+				toastr.warning("Please check your queries");
+			}
+			else{
+				$("#modal-save").modal('show');
+			}
+		}
+		else{
+			$http({
+				method: 'POST',
+				url: buildURL()+'/savePipeline',
+				data: {query: $scope.queryModel.freeQuery, name: name}
+			}).then(function success(response){
+				toastr.success('Pipeline saved');
+			}, function error(response) {
+				toastr.warning('Pipeline not saved: ', response.data);
+			});
+		}
+	}
+
+	$scope.loadPipeline = function(){
+
 	}
 
 	$scope.sortableOptions = {

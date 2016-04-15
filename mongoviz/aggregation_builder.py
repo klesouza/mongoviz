@@ -46,8 +46,8 @@ class AggregationBuilder:
             else:
                 if len(self._result[0]['series']) > 0 and 'y' not in self._result[0]['series'][0]:
                     self._errors.append(err.format('series.y'))
-                if len(self._result[0]['series']) > 0 and 'x' not in self._result[0]['series'][0]:
-                    self._errors.append(err.format('series.x'))
+                if len(self._result[0]['series']) > 0 and 'name' not in self._result[0]['series'][0]:
+                    self._errors.append(err.format('series.name'))
 
 
 
