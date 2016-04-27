@@ -1,0 +1,20 @@
+version: '2'
+services:
+    web:
+        build:
+            context: ..
+            dockerfile: ./dockerfiles/Dockerfile
+        command: python runserver.py
+        volumes:
+            - ../web:/home/www:ro
+        ports:
+            - "5000:5000"
+        links:
+            - mongo
+        environment:
+            - WEB_HOST=0.0.0.0
+    mongo:
+        build:
+            dockerfile: ./dockerfiles/Dockerfile-mongo
+            context: ..
+        command: --smallfiles --rest

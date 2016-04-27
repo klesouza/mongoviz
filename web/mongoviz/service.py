@@ -49,6 +49,7 @@ def plot(server, port, db, collection):
         raise 'Invalid request'
 
     result = agg.run()
+    print result
     if agg.has_errors():
         return json.dumps(agg.get_errors(), default=json_util.default), 400
     from highcharts import Chart

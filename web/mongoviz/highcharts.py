@@ -69,7 +69,6 @@ class Chart:
     _current = None
     def __init__(self, data):
         _current = EmptyChart()
-        print len(data)
         if isinstance(data,list) and len(data) > 0 and isinstance(data[0], dict) and '_id' in data[0]:
             if all([unicode(x['_id']).replace('.','').isdigit() for x in data]):
                 self._current = LineChart(data)

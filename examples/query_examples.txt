@@ -1,0 +1,4 @@
+# São Paulo(35), Rio de Janeiro(33), Minhas Gerais(31)
+$match: {"estado_ibge": {"$in": [31,33,35]}}
+$group: {"_id": {"year": "$ano", "uf": "$estado_ibge"}, "y": {"$sum": "$valor"}}
+$group: {"_id": "$_id.year", "series": {"$addToSet": {"name": "$_id.uf", "y": "$y"}}}

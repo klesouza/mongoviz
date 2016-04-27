@@ -68,8 +68,8 @@
                                 <li ng-repeat="a in ops"><a ng-click="addPipeline(a)">{{a}}</a></li>
                             </ul>
                         </div>
-                        <button class='btn btn-default' ng-click="savePipeline()">Save Pipeline</button>
-                        <button class='btn btn-default' ng-click="loadPipeline()">Load Pipeline</button>
+                        <button style="display:none" class='btn btn-default' ng-click="savePipeline()">Save Pipeline</button>
+                        <button style="display:none" class='btn btn-default' ng-click="loadPipeline()">Load Pipeline</button>
                     </div>
                         <ul ui-sortable="sortableOptions" ng-model="pipeline" class="list-group">
                             <li ng-repeat="a in pipeline track by $index" class="list-group-item">

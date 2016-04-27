@@ -1,2 +1,3 @@
 *.pyc
 mongoviz/*.pyc
+mongoviz/web/*.pyc

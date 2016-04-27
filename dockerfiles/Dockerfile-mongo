@@ -1,0 +1,6 @@
+FROM mongo
+
+COPY ./examples/data.json /tmp/data.json
+RUN echo \#\!'/bin/bash' >> /usr/local/bin/seed
+RUN echo "mongoimport -d test -c example --type json --jsonArray --file /tmp/data.json" >> /usr/local/bin/seed
+RUN chmod +x /usr/local/bin/seed
