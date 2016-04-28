@@ -5,6 +5,7 @@
 *.cs     diff=csharp
 
 web/mongoviz/static/* linguist-vendored
+web/mongoviz/views/* linguist-vendored
 
 # Standard to msysgit
 *.doc	 diff=astextplain
